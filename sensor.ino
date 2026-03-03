@@ -48,7 +48,7 @@ void connect_mqtt() {
   if (!mqtt.connect("", MQTT_USER, MQTT_PASS)) {
     printf("Failed to connect to MQTT broker.\n");
     for (;;){
-      digitalWrite(LED_YELLOW, 1);
+      digitalWrite(LED_YELLOW, 1); //if MQTT is not connected, yellow LED is flashing
       delay(500);
       digitalWrite(LED_YELLOW, 0);
     } // wait here forever
@@ -154,7 +154,7 @@ void loop() {
 
   //------------------display--------code----------------------
   display.clearDisplay();
-  display.setTextSize(2);
+  display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
   display.setCursor(0,0);
   display.print("TEMP(C):");
