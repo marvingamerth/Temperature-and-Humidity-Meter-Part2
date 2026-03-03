@@ -23,6 +23,8 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 #define TOPIC_ROOM_TEMP TOPIC_PREFIX"/room/temp"
 #define TOPIC_ROOM_HUMID TOPIC_PREFIX"/room/humid"
+#define TOPIC_NOTI_ON TOPIC_PREFIX"/noti/on"
+#define TOPIC_NOTI_OFF TOPIC_PREFIX"/noti/off"
 
 //--------------Wifi and MQTT Connecting---------------------------------
 WiFiClient wifiClient;
@@ -56,9 +58,14 @@ void connect_mqtt() {
   }
   mqtt.setCallback(mqtt_callback);
   printf("MQTT broker connected.\n");
+  //subscribe for get data from user device and dashboard
+
+  mqtt.subscribe(TOPIC_NOTI_ON);
+  mqtt.subscribe(TOPIC_NOTI_OFF);
 }
 
-void mqtt_callback(char* topic, byte* payload, unsigned int length) {
+void mqtt_callback(char* topic, byte* payload, unsigned int length){
+  printf("%s\n", topic);
 //   pinMode(LED_RED, OUTPUT);
 //   pinMode(LED_YELLOW, OUTPUT);
 //   pinMode(LED_GREEN, OUTPUT);
@@ -159,86 +166,18 @@ void taskdht(){
     taskdht_state = DHT_OFF;
     timestamp2 = now;
   }
-  display.display();
+  
 }
 
-void loop() {
+void loop(){
+  
   mqtt.loop();
   taskled();
   taskdht();
-  // delay(2000);
 
-  // //digitalWrite(BUZZER, 1);
+  display.display();
 
-  // digitalWrite(LED_GREEN, 1); //show the machine status
-  // delay(200);
-  // digitalWrite(LED_GREEN, 0);
-
-  
-
-  // if (!isnan(h)){
-  //   String humidStr = String(h);
-  //   client.publish("home/sensor/temp", humidStr.c_str());
-  // }
-  // if (isnan(h) || isnan(t) || isnan(f)) {
-  // Serial.println(F("Failed to read from DHT sensor!"));
-  // return 0;
-  // }
-  // Serial.print(F("Humidity: "));
-  // Serial.print(h);
-  // Serial.print(F("% Temperature: "));
-  // Serial.print(t);
-  // Serial.print('-\n');
-
-
-  // float h = dht.readHumidity();
-  // float t = dht.readTemperature();
-
-  // uint8_t now = millis();
-  // if(now - last_publish >= 2000){
-
-  
-  // String payload((int)t);
-  // String temp = String(t, 2);
-  // mqtt.publish(TOPIC_ROOM_TEMP, temp.c_str());
-  // printf("Publishing TEMP Value (C): %.2f\n", t);
-
-  // String humid = String(h, 2);
-  // mqtt.publish(TOPIC_ROOM_HUMID, humid.c_str());
-  // printf("Publishing HUMIDITY Value: %.2f\n", h);
-
-
-    
-  // }
-
-  // String payload(t);
-  // printf("Publishing room temp: %.2f\n", t);
-  // mqtt.publish(TOPIC_ROOM_TEMP, payload.c_str());
-
-  // String payload(h);
-  // printf("Publishing room humidity: %.2f\n",h );
-  // mqtt.publish(TOPIC_ROOM_HUMID, payload.c_str());
-
-  // mqtt.setCallback(mqtt_callback);
-  // mqtt.subscribe(TOPIC_LED_GREEN);
-  // printf("MQTT broker connected.\n")
-
-  //------------------display--------code----------------------
-  // display.clearDisplay();
-  // display.setTextSize(1);
-  // display.setTextColor(SSD1306_WHITE);
-  // display.setCursor(0,0);
-  // display.print("TEMP(C):");
-  // display.setCursor(93, 0);
-  // display.print(temp);
-  // display.setCursor(0, 35);
-  // display.print("HUMID(%):");
-  // display.setCursor(93, 35);
-  // display.print(humid);
-  
-  // display.display();
-
-  //--------------------------------------------------------------------
+}
 
 }
 
