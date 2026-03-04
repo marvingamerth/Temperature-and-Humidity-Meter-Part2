@@ -26,6 +26,9 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define TOPIC_NOTI_ON TOPIC_PREFIX"/noti/on"
 #define TOPIC_NOTI_OFF TOPIC_PREFIX"/noti/off"
 
+
+
+
 //--------------Wifi and MQTT Connecting---------------------------------
 WiFiClient wifiClient;
 PubSubClient mqtt(MQTT_BROKER, 1883, wifiClient);
@@ -64,20 +67,7 @@ void connect_mqtt() {
   mqtt.subscribe(TOPIC_NOTI_OFF);
 }
 
-void mqtt_callback(char* topic, byte* payload, unsigned int length){
-  printf("%s\n", topic);
-//   pinMode(LED_RED, OUTPUT);
-//   pinMode(LED_YELLOW, OUTPUT);
-//   pinMode(LED_GREEN, OUTPUT);
 
-//   digitalWrite(LED_RED, HIGH);
-//   digitalWrite(LED_GREEN,LOW);
-
-//   setup_wifi();
-//   client.setServer(mqtt_server, 1883);
-
-//   if ()
-}
 
 enum taskled_state_t{
   LED_OFF,
@@ -88,9 +78,33 @@ enum taskdht_state_t{
   DHT_ON,
   DHT_OFF,
 };
+
+enum taskbuz_state_t{
+  BUZ_ON,
+  BUZ_OFF,
+};
+
 taskled_state_t taskled_state;
 taskdht_state_t taskdht_state;
-uint32_t timestamp1, timestamp2;
+taskbuz_state_t taskbuz_state;
+uint32_t timestamp1, timestamp2, timestamp3;
+
+
+void mqtt_callback(char* topic, byte* payload, unsigned int length){
+  printf("%s\n", topic);
+  char message[length+1];
+  memcpy(message, payload, length);
+  message[length] = '\0';
+  if(strcmp(topic, TOPIC_NOTI_ON) == 0){ //temporary alert system
+    if(strcmp(message, "1")==0){
+      digitalWrite(LED_YELLOW, 1);
+    }else if(strcmp(message, "0") == 0){
+      digitalWrite(LED_YELLOW, 0);
+    }
+    printf("%s\n", message);
+  }
+
+}
 
 
 //-------------------set-up--and--loop--------------------------
@@ -115,6 +129,10 @@ void setup() {
 
   timestamp1 = millis();
   timestamp2 = millis();
+  timestamp3 = millis();
+  
+
+  
 }
 
 void taskled() {
@@ -132,6 +150,27 @@ void taskled() {
       digitalWrite(LED_GREEN, 1);
       taskled_state = LED_ON;
       timestamp1 = now;
+    }
+  }
+}
+
+void taskbuz(int work) { // yellow led for alert instead buzzer (waiting for electronic part)
+  uint32_t now; // not working now
+  if (work==1){
+    if(taskbuz_state == BUZ_ON){
+      now = millis();
+      if(now - timestamp3 >= 100){
+        digitalWrite(LED_YELLOW, 0);
+        taskbuz_state = BUZ_OFF;
+        timestamp3 = now;
+      }
+    }else if(taskbuz_state == BUZ_OFF){
+      now = millis();
+      if(now - timestamp3 >= 900){
+        digitalWrite(LED_YELLOW, 1);
+        taskbuz_state = BUZ_ON;
+        timestamp3 = now;
+      }
     }
   }
 }
@@ -176,8 +215,6 @@ void loop(){
   taskdht();
 
   display.display();
-
-}
 
 }
 
