@@ -11,7 +11,7 @@
 #define LED_YELLOW 41
 #define LED_RED 40 
 //-------------------------------------------------------
-#define BUZZER 39
+#define BUZZER 5
 #define DHTPIN 6
 #define DHTTYPE DHT22
 
@@ -89,6 +89,8 @@ taskdht_state_t taskdht_state;
 taskbuz_state_t taskbuz_state;
 uint32_t timestamp1, timestamp2, timestamp3;
 
+bool isNotiActive = false;
+bool yellow_state = false;
 
 void mqtt_callback(char* topic, byte* payload, unsigned int length){
   printf("%s\n", topic);
@@ -97,9 +99,12 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length){
   message[length] = '\0';
   if(strcmp(topic, TOPIC_NOTI_ON) == 0){ //temporary alert system
     if(strcmp(message, "1")==0){
+      isNotiActive = true;
       digitalWrite(LED_YELLOW, 1);
     }else if(strcmp(message, "0") == 0){
+      isNotiActive = false;
       digitalWrite(LED_YELLOW, 0);
+      digitalWrite(BUZZER, 1);
     }
     printf("%s\n", message);
   }
@@ -115,6 +120,8 @@ void setup() {
   pinMode(LED_YELLOW, OUTPUT);
   pinMode(LED_RED, OUTPUT);
   pinMode(BUZZER, OUTPUT);
+
+  digitalWrite(BUZZER, 1); //make buzzer quiet when start.
 
   dht.begin();
   connect_wifi();
@@ -154,26 +161,31 @@ void taskled() {
   }
 }
 
-void taskbuz(int work) { // yellow led for alert instead buzzer (waiting for electronic part)
-  uint32_t now; // not working now
-  if (work==1){
+void taskbuz() { 
+  if(isNotiActive){
+    uint32_t now = millis();
     if(taskbuz_state == BUZ_ON){
-      now = millis();
       if(now - timestamp3 >= 100){
-        digitalWrite(LED_YELLOW, 0);
+        digitalWrite(BUZZER, 1);
+        digitalWrite(LED_RED, 0); // สั่ง 1 ให้เงียบ
         taskbuz_state = BUZ_OFF;
         timestamp3 = now;
       }
     }else if(taskbuz_state == BUZ_OFF){
-      now = millis();
-      if(now - timestamp3 >= 900){
-        digitalWrite(LED_YELLOW, 1);
+      if(now - timestamp3 >= 100){
+        digitalWrite(BUZZER, 0);
+        digitalWrite(LED_RED, 1); // สั่ง 0 ให้ดัง
         taskbuz_state = BUZ_ON;
         timestamp3 = now;
       }
     }
+  } else {
+    // ป้องกันกรณีระบบค้าง ให้บัซเซอร์เงียบเสมอถ้าไม่ได้อยู่ในโหมดแจ้งเตือน
+    digitalWrite(BUZZER, 1);
+    digitalWrite(LED_RED, 0); 
   }
 }
+
 
 void taskdht(){
   uint32_t now = millis();
@@ -201,10 +213,12 @@ void taskdht(){
       display.print("HUMID(%):");
       display.setCursor(93, 35);
       display.print(humid);
+      display.display();
     }
     taskdht_state = DHT_OFF;
     timestamp2 = now;
   }
+  
   
 }
 
@@ -213,10 +227,8 @@ void loop(){
   mqtt.loop();
   taskled();
   taskdht();
+  taskbuz();
 
-  display.display();
+  
 
 }
-
-
-
