@@ -46,8 +46,18 @@ void connect_wifi() {
     delay(100);
     digitalWrite(LED_RED, 0); //----------------
     delay(500);
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.println("Connecting...");
   }
   printf("\nWiFi connected.\n");
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.println("WiFi Connected!");
+  display.print("IP: ");
+  display.println(WiFi.localIP());
+  display.display();
+  delay(1000);
 }
 void connect_mqtt() {
   printf("Connecting to MQTT broker at %s.\n", MQTT_BROKER);
@@ -122,14 +132,19 @@ void setup() {
   pinMode(BUZZER, OUTPUT);
 
   digitalWrite(BUZZER, 1); //make buzzer quiet when start.
+  Wire.begin(48, 47);
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    printf("SSD1306 allocation failed\n");
+    for(;;); // หยุดถ้าจอเสีย
+  }
+  display.clearDisplay();
+  display.display();
 
   dht.begin();
   connect_wifi();
   connect_mqtt();
   last_publish = 0;
 
-  Wire.begin(48, 47);
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
 
   taskled_state = LED_ON;
   taskdht_state = DHT_ON;
@@ -165,16 +180,16 @@ void taskbuz() {
   if(isNotiActive){
     uint32_t now = millis();
     if(taskbuz_state == BUZ_ON){
-      if(now - timestamp3 >= 100){
+      if(now - timestamp3 >= 300){
         digitalWrite(BUZZER, 1);
-        digitalWrite(LED_RED, 0); // สั่ง 1 ให้เงียบ
+        //digitalWrite(LED_RED, 0); // สั่ง 1 ให้เงียบ
         taskbuz_state = BUZ_OFF;
         timestamp3 = now;
       }
     }else if(taskbuz_state == BUZ_OFF){
       if(now - timestamp3 >= 100){
         digitalWrite(BUZZER, 0);
-        digitalWrite(LED_RED, 1); // สั่ง 0 ให้ดัง
+        //digitalWrite(LED_RED, 1); // สั่ง 0 ให้ดัง
         taskbuz_state = BUZ_ON;
         timestamp3 = now;
       }
