@@ -45,6 +45,22 @@ void connect_wifi() {
   printf("\nWiFi connected.\n");
 }
 
+void connect_mqtt() {
+  printf("Connecting to MQTT broker at %s.\n", MQTT_BROKER);
+  if (!mqtt.connect("", MQTT_USER, MQTT_PASS)) {
+    printf("Failed to connect to MQTT broker.\n");
+    for (;;) {} // wait here forever
+  }
+  mqtt.setCallback(mqtt_callback);
+  printf("MQTT broker connected.\n");
+}
+void mqtt_callback(char* topic, byte* payload, unsigned int length){
+  printf("%s\n", topic);
+}
+
+
+
+
 // --- ย้ายฟังก์ชันมาไว้ข้างบน เพื่อความชัวร์และลด Error ---
 long microsecondsToCentimeters(long microseconds) {
   // ความเร็วเสียงคือ 29 ไมโครวินาทีต่อเซนติเมตร
@@ -134,49 +150,18 @@ void taskultrasonic(){
 void setup() {
   Serial.begin(115200);
   pinMode(SW_PIN, INPUT_PULLUP);
+  pinMode(LED_RED, OUTPUT);
   Wire.begin(48, 47);
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
 
   connect_wifi();
+  connect_mqtt();
+  last_publish = 0;
 }
 
 void loop() {
+  mqtt.loop();
 
   tasksw();
   taskultrasonic();
-  // long duration, cm;
-
-  // // ส่งสัญญาณ Trigger
-  // pinMode(pingPin, OUTPUT);
-  // digitalWrite(pingPin, LOW);
-  // delayMicroseconds(2);
-  // digitalWrite(pingPin, HIGH);
-  // delayMicroseconds(5);
-  // digitalWrite(pingPin, LOW);
-
-  // // รับสัญญาณ Echo
-  // pinMode(inPin, INPUT);
-  // duration = pulseIn(inPin, HIGH);
-
-  // // แปลงค่า
-  // cm = microsecondsToCentimeters(duration);
-  // display.clearDisplay();
-  // display.setTextSize(1);
-  // display.setTextColor(SSD1306_WHITE);
-  // display.setCursor(0,0);
-
-
-  // // ตรวจสอบเงื่อนไขระยะทางที่คุณกำหนด
-  // if (cm >= MIN_DIST && cm <= MAX_DIST) {
-  //   Serial.print("Target Detected: ");
-  //   Serial.print(cm);
-  //   Serial.println(" cm");
-  //   display.print(cm);
-  // } else {
-  //   Serial.println("Out of Range / No Object");
-  //   display.print("Out of range/too close");
-  // }
-  // display.display();
-
-  // delay(300);
 }
