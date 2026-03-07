@@ -29,6 +29,8 @@ const int inPin = 6;
 const int MIN_DIST = 2;   // ระยะใกล้สุดที่ยอมรับได้ (cm)
 const int MAX_DIST = 30;  // ระยะไกลสุดที่ต้องการ (cm)
 
+long current_distance = 999;
+
 void connect_wifi() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
@@ -45,6 +47,10 @@ void connect_wifi() {
   printf("\nWiFi connected.\n");
 }
 
+void mqtt_callback(char* topic, byte* payload, unsigned int length){
+  printf("%s\n", topic);
+}
+
 void connect_mqtt() {
   printf("Connecting to MQTT broker at %s.\n", MQTT_BROKER);
   if (!mqtt.connect("", MQTT_USER, MQTT_PASS)) {
@@ -54,9 +60,7 @@ void connect_mqtt() {
   mqtt.setCallback(mqtt_callback);
   printf("MQTT broker connected.\n");
 }
-void mqtt_callback(char* topic, byte* payload, unsigned int length){
-  printf("%s\n", topic);
-}
+
 
 
 
@@ -85,7 +89,8 @@ void tasksw(){
   if(tasksw_state == WAIT_SW_PRESS){
     if(digitalRead(SW_PIN) == 0){
       tasksw_state = DEBOUNCE1;
-      printf("MQTT publish\n");//dummy
+      printf("MQTT publish for stop alert\n");//dummy
+      mqtt.publish(TOPIC_NOTI_ON, "0");
       timestamp1 = millis();
     }
   }else if(tasksw_state == DEBOUNCE1){
@@ -129,6 +134,8 @@ void taskultrasonic(){
     }else{
       cm = microsecondsToCentimeters(duration);
     }
+
+    current_distance = cm;
     display.clearDisplay();
     display.setTextSize(1);
     display.setTextColor(SSD1306_WHITE);
@@ -145,6 +152,25 @@ void taskultrasonic(){
       display.print("Out of range");
     }
     display.display();
+  }
+}
+
+void task_mqtt_publish(){
+  if(millis() - last_publish >= 2000){
+    last_publish = millis();
+
+    if(mqtt.connected()){
+      char payload[20];
+      if(current_distance >= MIN_DIST && current_distance <= MAX_DIST){
+        snprintf(payload, sizeof(payload), "%ld", current_distance);
+      }else{
+        snprintf(payload, sizeof(payload), "out_of_range");
+      }
+
+      mqtt.publish(TOPIC_USER_DISTANCE, payload);
+      printf("Published %s", payload);
+
+    }
   }
 }
 void setup() {
@@ -164,4 +190,5 @@ void loop() {
 
   tasksw();
   taskultrasonic();
+  task_mqtt_publish();
 }
