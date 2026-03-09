@@ -7,11 +7,9 @@ void setup() {
 }
 
 void loop() {
-  if(digitalRead(2)==LOW){
-    Serial.println("low\n");
+  if(digitalRead(2)==HIGH){
     digitalWrite(3, LOW);
   }else{
-    Serial.println("high\n");
     digitalWrite(3, HIGH);
   }
   delay(300);
