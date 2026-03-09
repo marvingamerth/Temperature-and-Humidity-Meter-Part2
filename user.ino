@@ -4,6 +4,7 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include "config.h"
+#include "HX711.h"
 
 #define SW_PIN 2
 #define LED_GREEN 40
@@ -15,7 +16,19 @@
 #define OLED_RESET     -1
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define TOPIC_USER_DISTANCE TOPIC_PREFIX"/user/distance"
+#define TOPIC_USER_WEIGHT TOPIC_PREFIX"/user/weight"
 #define TOPIC_NOTI_ON TOPIC_PREFIX"/noti/on"
+
+float calibration_factor =770007.00; 
+#define zero_factor 6870930
+#define DOUT  6
+#define CLK   5
+#define DEC_POINT  2
+
+float offset=0;
+float get_units_kg();
+
+HX711 scale(DOUT, CLK);
 
 WiFiClient wifiClient;
 PubSubClient mqtt(MQTT_BROKER, 1883, wifiClient);
@@ -23,8 +36,8 @@ uint32_t last_publish;
 uint32_t last_ultrasonic_time =0;
 
 //ultrasonic control------------------------
-const int pingPin = 5;
-const int inPin = 6;
+const int pingPin = 15;
+const int inPin = 16;
 
 const int MIN_DIST = 2;   // ระยะใกล้สุดที่ยอมรับได้ (cm)
 const int MAX_DIST = 30;  // ระยะไกลสุดที่ต้องการ (cm)
@@ -170,6 +183,13 @@ void task_mqtt_publish(){
       mqtt.publish(TOPIC_USER_DISTANCE, payload);
       printf("Published %s", payload);
 
+      float current_weight = get_units_kg() + offset; // ดึงค่าน้ำหนัก
+      char payload_weight[20];
+      snprintf(payload_weight, sizeof(payload_weight), "%.2f", current_weight); // แปลงทศนิยม 2 ตำแหน่ง
+      
+      mqtt.publish(TOPIC_USER_WEIGHT, payload_weight);
+      printf("Published Weight: %s kg\n", payload_weight);
+
     }
   }
 }
@@ -179,10 +199,17 @@ void setup() {
   pinMode(LED_RED, OUTPUT);
   Wire.begin(48, 47);
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-
+  Serial.println("Load Cell");
+  scale.set_scale(calibration_factor); 
+  scale.set_offset(zero_factor);  
   connect_wifi();
   connect_mqtt();
   last_publish = 0;
+}
+
+float get_units_kg()
+{
+  return(scale.get_units()*0.453592);
 }
 
 void loop() {
@@ -191,4 +218,9 @@ void loop() {
   tasksw();
   taskultrasonic();
   task_mqtt_publish();
+  Serial.print("Reading: ");
+  String data = String(get_units_kg()+offset, DEC_POINT);
+  Serial.print(data);
+  Serial.println(" kg");
+  
 }
