@@ -913,6 +913,53 @@
         "wires": []
     },
     {
+        "id": "ui_btn_reset_water_01",
+        "type": "ui_button",
+        "z": "83433bbfc4f221ea",
+        "name": "Reset Water Gauge",
+        "group": "ui_group_status",
+        "order": 30,
+        "width": "0",
+        "height": "0",
+        "passthru": false,
+        "label": "🔄 รีเซ็ตค่าน้ำ (Reset)",
+        "tooltip": "รีเซ็ตปริมาณน้ำและกราฟของวันนี้",
+        "color": "white",
+        "bgcolor": "#dc3545",
+        "className": "",
+        "icon": "refresh",
+        "payload": "reset",
+        "payloadType": "str",
+        "topic": "reset",
+        "topicType": "str",
+        "x": 970,
+        "y": 840,
+        "wires": [
+            [
+                "func_clear_water_vars_01"
+            ]
+        ]
+    },
+    {
+        "id": "func_clear_water_vars_01",
+        "type": "function",
+        "z": "83433bbfc4f221ea",
+        "name": "Clear Variables & Update",
+        "func": "let d = new Date();\nd.setHours(d.getHours() - 6);\nlet logicalDay = d.getDate();\nlet currentHour = new Date().getHours();\n\n// 1. รีเซ็ตตัวแปรที่เกี่ยวข้องทั้งหมดให้เป็น 0 หรือค่าว่าง\nflow.set('waterDrunkToday', 0);\nflow.set('dailyWater', { logicalDay: logicalDay, total: 0 });\nflow.set('hourlyWater', { hour: currentHour, total: 0 });\nflow.set('waterTracking', undefined);\nflow.set('alertData', { lastAlertHour: -1, waterAtAlert: 0 });\nflow.set('lastWaterLevel', undefined); // ล้าง baseline ของระดับน้ำเซ็นเซอร์\nflow.set('muteActive', false);\n\n// 2. ข้อมูลกระตุ้น Main Logic Engine ให้เกจกลับไปที่ 0%\nlet triggerMsg = { payload: \"update\" };\n\n// 3. ข้อมูลคำสั่งล้างกราฟ (กราฟ Node-RED จะล้างตัวเองเมื่อได้รับ Array ว่าง [])\nlet clearChartMsg = { payload: [] };\n\n// ส่งออก 2 พอร์ต (พอร์ต 1 ไป Engine, พอร์ต 2 ไป Charts)\nreturn [triggerMsg, clearChartMsg];",
+        "outputs": 2,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1190,
+        "y": 840,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
         "id": "ui_group_profile",
         "type": "ui_group",
         "name": "ข้อมูลผู้ใช้ (Patient Profile)",
