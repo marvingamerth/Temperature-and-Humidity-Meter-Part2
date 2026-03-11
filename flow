@@ -1,0 +1,1011 @@
+[
+    {
+        "id": "83433bbfc4f221ea",
+        "type": "tab",
+        "label": "Elderly Water System V2",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "45d3db1a380259f4",
+        "type": "ui_button",
+        "z": "83433bbfc4f221ea",
+        "name": "Normal Mode",
+        "group": "ui_group_profile",
+        "order": 1,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "label": "บุคคลทั่วไป (Normal)",
+        "tooltip": "เป้าหมาย 2.5 ลิตร/วัน",
+        "color": "white",
+        "bgcolor": "#28a745",
+        "className": "",
+        "icon": "accessibility",
+        "payload": "normal",
+        "payloadType": "str",
+        "topic": "health_status",
+        "topicType": "str",
+        "x": 130,
+        "y": 40,
+        "wires": [
+            [
+                "1b270832e6dc3ac7"
+            ]
+        ]
+    },
+    {
+        "id": "1d436261af5eed1f",
+        "type": "ui_button",
+        "z": "83433bbfc4f221ea",
+        "name": "Sick Mode",
+        "group": "ui_group_profile",
+        "order": 2,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "label": "ผู้ป่วย (Sick)",
+        "tooltip": "คำนวณตามน้ำหนักและโรค",
+        "color": "white",
+        "bgcolor": "#ffc107",
+        "className": "",
+        "icon": "local_hospital",
+        "payload": "sick",
+        "payloadType": "str",
+        "topic": "health_status",
+        "topicType": "str",
+        "x": 130,
+        "y": 80,
+        "wires": [
+            [
+                "1b270832e6dc3ac7"
+            ]
+        ]
+    },
+    {
+        "id": "8a7afabcede600b2",
+        "type": "ui_form",
+        "z": "83433bbfc4f221ea",
+        "name": "Setup Profile",
+        "label": "กรอกข้อมูลพื้นฐาน (สำหรับโหมดผู้ป่วย)",
+        "group": "ui_group_profile",
+        "order": 3,
+        "width": "6",
+        "height": "0",
+        "options": [
+            {
+                "label": "อายุ (ปี)",
+                "value": "age",
+                "type": "number",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "น้ำหนัก (kg)",
+                "value": "weight",
+                "type": "number",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "ส่วนสูง (cm)",
+                "value": "height",
+                "type": "number",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "ปัสสาวะ (ml)",
+                "value": "urine",
+                "type": "number",
+                "required": false,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "age": "",
+            "weight": "",
+            "height": "",
+            "urine": ""
+        },
+        "payload": "",
+        "submit": "บันทึกข้อมูล",
+        "cancel": "ล้าง",
+        "topic": "form_data",
+        "topicType": "str",
+        "splitLayout": false,
+        "className": "",
+        "x": 120,
+        "y": 140,
+        "wires": [
+            [
+                "1b270832e6dc3ac7"
+            ]
+        ]
+    },
+    {
+        "id": "b768c066b4c624d4",
+        "type": "ui_dropdown",
+        "z": "83433bbfc4f221ea",
+        "name": "Gender",
+        "label": "เพศ",
+        "tooltip": "",
+        "place": "",
+        "group": "ui_group_profile",
+        "order": 4,
+        "width": 6,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "ชาย",
+                "value": "male",
+                "type": "str"
+            },
+            {
+                "label": "หญิง",
+                "value": "female",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "sex",
+        "topicType": "str",
+        "className": "",
+        "x": 120,
+        "y": 180,
+        "wires": [
+            [
+                "1b270832e6dc3ac7"
+            ]
+        ]
+    },
+    {
+        "id": "0a6d208dc363db17",
+        "type": "ui_dropdown",
+        "z": "83433bbfc4f221ea",
+        "name": "Diseases",
+        "label": "โรคประจำตัว",
+        "tooltip": "",
+        "place": "",
+        "group": "ui_group_profile",
+        "order": 5,
+        "width": 6,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "ไม่มี",
+                "value": 5,
+                "type": "num"
+            },
+            {
+                "label": "โรคไตวายเรื้อรัง",
+                "value": 1,
+                "type": "num"
+            },
+            {
+                "label": "ติดเชื้อทางเดินปัสสาวะ",
+                "value": 2,
+                "type": "num"
+            },
+            {
+                "label": "โรคเบาหวาน",
+                "value": 3,
+                "type": "num"
+            },
+            {
+                "label": "โรคนิ่วในไต",
+                "value": 4,
+                "type": "num"
+            }
+        ],
+        "payload": "",
+        "topic": "diseases",
+        "topicType": "str",
+        "className": "",
+        "x": 120,
+        "y": 240,
+        "wires": [
+            [
+                "1b270832e6dc3ac7"
+            ]
+        ]
+    },
+    {
+        "id": "1b270832e6dc3ac7",
+        "type": "function",
+        "z": "83433bbfc4f221ea",
+        "name": "Save & Merge Profile",
+        "func": "let profile = flow.get('userProfile') || {};\nif (msg.topic === 'form_data') {\n    profile = { ...profile, ...msg.payload };\n} else if (msg.topic === 'sex') {\n    profile.sex = msg.payload;\n} else if (msg.topic === 'diseases') {\n    profile.diseases = msg.payload;\n} else if (msg.topic === 'health_status') {\n    profile.healthStatus = msg.payload;\n}\nflow.set('userProfile', profile);\nmsg.payload = profile;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 140,
+        "wires": [
+            [
+                "0a9fc294a3934013"
+            ]
+        ]
+    },
+    {
+        "id": "258d94a58f52b9ad",
+        "type": "mqtt in",
+        "z": "83433bbfc4f221ea",
+        "name": "Board 2 Temp",
+        "topic": "b6810504044/room/temp",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "0396c2c9339809f4",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 110,
+        "y": 340,
+        "wires": [
+            [
+                "c05d4c51689f9e5f"
+            ]
+        ]
+    },
+    {
+        "id": "a081aea98fd22554",
+        "type": "mqtt in",
+        "z": "83433bbfc4f221ea",
+        "name": "Board 2 Humid",
+        "topic": "b6810504044/room/humid",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "0396c2c9339809f4",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 110,
+        "y": 400,
+        "wires": [
+            [
+                "e8a4d52079be67f3"
+            ]
+        ]
+    },
+    {
+        "id": "c05d4c51689f9e5f",
+        "type": "function",
+        "z": "83433bbfc4f221ea",
+        "name": "Store Temp",
+        "func": "global.set('current_temp', parseFloat(msg.payload));\nreturn msg;",
+        "outputs": 1,
+        "x": 310,
+        "y": 360,
+        "wires": [
+            [
+                "0a9fc294a3934013"
+            ]
+        ]
+    },
+    {
+        "id": "e8a4d52079be67f3",
+        "type": "function",
+        "z": "83433bbfc4f221ea",
+        "name": "Store Humid",
+        "func": "global.set('current_humid', parseFloat(msg.payload));\nreturn msg;",
+        "outputs": 1,
+        "x": 310,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b232dbc520b607a1",
+        "type": "mqtt in",
+        "z": "83433bbfc4f221ea",
+        "name": "Board 1 Water",
+        "topic": "b6810504044/user/weight",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "0396c2c9339809f4",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 110,
+        "y": 460,
+        "wires": [
+            [
+                "d9e7beb0c1511672"
+            ]
+        ]
+    },
+    {
+        "id": "d9e7beb0c1511672",
+        "type": "function",
+        "z": "83433bbfc4f221ea",
+        "name": "Daily & Hourly Accumulator",
+        "func": "let currentHour = new Date().getHours();\n\n// 1. SAFE LOGICAL DAY FIX (Handles months properly)\nlet d = new Date();\nd.setHours(d.getHours() - 6);\nlet logicalDay = d.getDate();\n\nlet amount = parseFloat(msg.payload) || 0;\n\n// 2. Glitch & Spill Filter\nlet tracking = flow.get('waterTracking') || { targetPerHour: 100 }; // Fallback value\nlet maxAllowed = tracking.targetPerHour * 3;\n\nlet msg4 = { payload: \"\" };\n\nif (amount > maxAllowed) {\n    msg4.payload = \"Is it spilled? (น้ำหกหรือเปล่า?)\";\n    return [null, null, null, msg4]; \n}\n\nif (amount <= 0) {\n    return null; \n}\n\n// 3. Hourly Tracking\nlet hourlyData = flow.get('hourlyWater') || { hour: currentHour, total: 0 };\nif (hourlyData.hour !== currentHour) {\n    hourlyData = { hour: currentHour, total: 0 };\n}\n\nhourlyData.total += amount;\nflow.set('hourlyWater', hourlyData);\n\n// 4. Daily Tracking (Resets at 6:00 AM)\nlet dailyData = flow.get('dailyWater') || { logicalDay: logicalDay, total: 0 };\nif (dailyData.logicalDay !== logicalDay) {\n    dailyData = { logicalDay: logicalDay, total: 0 }; \n}\n\ndailyData.total += amount;\nflow.set('dailyWater', dailyData);\nflow.set('waterDrunkToday', dailyData.total);\n\n// 5. Send Outputs\nlet msg1 = { payload: dailyData.total }; \nlet msg2 = { payload: hourlyData.total, topic: \"ปริมาณ (ml)\" }; \nlet msg3 = { payload: dailyData.total, topic: \"ปริมาณ (ml)\" }; \n\nreturn [msg1, msg2, msg3, msg4];",
+        "outputs": 4,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 460,
+        "wires": [
+            [
+                "0a9fc294a3934013"
+            ],
+            [
+                "7e0dee277dc87d89"
+            ],
+            [
+                "34ba8b8f77123ce7"
+            ],
+            [
+                "15f8d6cc3ed23e68"
+            ]
+        ]
+    },
+    {
+        "id": "15f8d6cc3ed23e68",
+        "type": "ui_text",
+        "z": "83433bbfc4f221ea",
+        "group": "ui_group_status",
+        "order": 28,
+        "width": 0,
+        "height": 0,
+        "name": "Spill Warning",
+        "label": "แจ้งเตือน:",
+        "format": "<span style=\"color:red; font-weight:bold;\">{{msg.payload}}</span>",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 610,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "7e0dee277dc87d89",
+        "type": "ui_chart",
+        "z": "83433bbfc4f221ea",
+        "name": "Hourly Water",
+        "group": "caa578058f4da87f",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "สถิติการดื่มน้ำรายชั่วโมง (ml)",
+        "chartType": "bar",
+        "legend": "false",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "รอรับข้อมูลการดื่มครั้งแรก...",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1F77B4",
+            "#AEC7E8",
+            "#FF7F0E",
+            "#2CA02C",
+            "#98DF8A",
+            "#D62728",
+            "#FF9896",
+            "#9467BD",
+            "#C5B0D5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 610,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "34ba8b8f77123ce7",
+        "type": "ui_chart",
+        "z": "83433bbfc4f221ea",
+        "name": "Daily Water",
+        "group": "caa578058f4da87f",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "label": "สถิติการดื่มน้ำรายวัน (ml)",
+        "chartType": "bar",
+        "legend": "false",
+        "xformat": "D MMM",
+        "interpolate": "linear",
+        "nodata": "รอรับข้อมูลการดื่มครั้งแรก...",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "",
+        "removeOlder": 7,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#2CA02C",
+            "#AEC7E8",
+            "#FF7F0E",
+            "#2CA02C",
+            "#98DF8A",
+            "#D62728",
+            "#FF9896",
+            "#9467BD",
+            "#C5B0D5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 610,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0a9fc294a3934013",
+        "type": "function",
+        "z": "83433bbfc4f221ea",
+        "name": "Main Logic Engine",
+        "func": "let user = flow.get('userProfile') || {};\nlet temp = global.get('current_temp') || 25;\nlet drunk = flow.get('waterDrunkToday') || 0;\n\nif (!user.healthStatus) return null;\n\nlet startHour = 6;\nlet endHour = 22;\nlet currentHour = new Date().getHours();\n\nlet inTimeRange = false;\nif (startHour < endHour) {\n    inTimeRange = (currentHour >= startHour && currentHour < endHour);\n} else {\n    inTimeRange = (currentHour >= startHour || currentHour < endHour);\n}\n\nlet target = 0;\nlet ds = parseInt(user.diseases) || 5;\n\nif (user.healthStatus === 'normal') {\n    target = 2500;\n} else {\n    let weight = parseFloat(user.weight);\n    if (!weight || weight <= 0) return null;\n\n    let baseTarget = weight * 35;\n    target = baseTarget;\n\n    if (ds === 5) {\n        target = 2500;\n    } else if (ds === 1) {\n        let urine = parseFloat(user.urine) || 0;\n        target = urine + 500;\n    } else {\n        let age = parseInt(user.age) || 0;\n        if (age >= 30 && age <= 55) target *= 0.95;\n        else if (age > 55) target *= 0.90;\n\n        let heightCm = parseFloat(user.height) || 0;\n        if (heightCm > 0) {\n            let heightM = heightCm / 100;\n            let bmi = weight / (heightM * heightM); \n            if (bmi < 18.5) target *= 1.05;            \n            else if (bmi >= 25 && bmi < 30) target *= 0.95; \n            else if (bmi >= 30) target *= 0.90;        \n        }\n\n        if (ds === 3) target += 500;\n        else if (ds === 2 || ds === 4) target += (baseTarget * 0.20);\n    }\n\n    if (ds !== 1) {\n        if (temp >= 20 && temp <= 25) target *= 1.05;\n        else if (temp >= 26 && temp <= 30) target *= 1.10;\n        else if (temp > 30) target *= 1.15; \n    }\n}\n\nlet totalActiveHours = (endHour > startHour) ? (endHour - startHour) : (24 - startHour + endHour);\nif (totalActiveHours <= 0) totalActiveHours = 16;\n\nlet tracking = flow.get('waterTracking') || {\n    lastHour: currentHour,\n    drunkAtLastHour: drunk,\n    targetPerHour: target / totalActiveHours,\n    expectedWaterSoFar: target / totalActiveHours\n};\n\nif (currentHour === startHour && tracking.lastHour !== startHour) {\n    tracking = {\n        lastHour: currentHour,\n        drunkAtLastHour: 0,\n        targetPerHour: target / totalActiveHours,\n        expectedWaterSoFar: target / totalActiveHours\n    };\n    flow.set('muteActive', false); \n    flow.set('lastDrunkMuteCheck', 0);\n}\n\nif (currentHour !== tracking.lastHour && inTimeRange) {\n    let waterDrankLastHour = drunk - tracking.drunkAtLastHour;\n    let acceptableMin = tracking.targetPerHour * 0.8;\n    let acceptableMax = tracking.targetPerHour * 1.2;\n\n    let remainingHours = endHour - currentHour;\n    if (endHour <= startHour && currentHour >= startHour) {\n        remainingHours = (24 - currentHour) + endHour;\n    } else if (endHour <= startHour && currentHour < endHour) {\n        remainingHours = endHour - currentHour;\n    }\n    if (remainingHours < 1) remainingHours = 1;\n\n    if (waterDrankLastHour < acceptableMin || waterDrankLastHour > acceptableMax) {\n        let waterLeft = target - drunk;\n        tracking.targetPerHour = waterLeft / remainingHours;\n        if (tracking.targetPerHour < 0) tracking.targetPerHour = 0;\n    }\n\n    let hoursPassed = currentHour - startHour;\n    if (hoursPassed < 0) hoursPassed += 24; \n    if (hoursPassed === 0) hoursPassed = 1; \n    \n    tracking.expectedWaterSoFar = tracking.targetPerHour * hoursPassed;\n    \n    tracking.drunkAtLastHour = drunk;\n    tracking.lastHour = currentHour;\n\n    flow.set('waterTracking', tracking);\n}\n\nlet lastDrunkMuteCheck = flow.get('lastDrunkMuteCheck') || 0;\nif (drunk > lastDrunkMuteCheck) {\n    flow.set('muteActive', false); \n    flow.set('lastDrunkMuteCheck', drunk);\n}\n\nlet alertData = flow.get('alertData') || { lastAlertHour: -1, waterAtAlert: 0 };\nlet alert = false;\n\nlet isBehind = (drunk < tracking.expectedWaterSoFar && inTimeRange);\nlet isMuted = flow.get('muteActive') === true; \n\nif (isBehind && !isMuted) {\n    if (alertData.lastAlertHour !== currentHour) {\n        alert = true;\n        alertData.lastAlertHour = currentHour;\n        alertData.waterAtAlert = drunk;\n    } else {\n        let waterDrankSinceAlert = drunk - alertData.waterAtAlert;\n        if (waterDrankSinceAlert < (tracking.targetPerHour * 0.8)) {\n            alert = true; \n        }\n    }\n} else {\n    if (drunk >= tracking.expectedWaterSoFar) {\n        alertData.lastAlertHour = -1;\n    }\n}\n\nflow.set('alertData', alertData);\n\nlet percent = parseFloat(((drunk / target) * 100).toFixed(1));\nif (percent > 100) percent = 100; \n\nlet remaining = target - drunk;\nif (remaining < 0) remaining = 0;\n\nlet msg1 = { payload: (target / 1000).toFixed(2) }; \nlet msg2 = { payload: percent };                    \nlet msg3 = { alert: alert, payload: alert ? \"1\" : \"0\" }; \nlet msg4 = { payload: (target / 10000).toFixed(2) }; \nlet msg5 = { payload: (remaining / 1000).toFixed(2) }; \n\nreturn [msg1, msg2, msg3, msg4, msg5];",
+        "outputs": 5,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 280,
+        "wires": [
+            [
+                "896194042c433a16"
+            ],
+            [
+                "5ec7ba6f678d323b"
+            ],
+            [
+                "e43690e71d1275e2"
+            ],
+            [
+                "dcfb8e45d1abdaac"
+            ],
+            [
+                "0169f539a3f2f302"
+            ]
+        ]
+    },
+    {
+        "id": "0169f539a3f2f302",
+        "type": "ui_text",
+        "z": "83433bbfc4f221ea",
+        "group": "ui_group_status",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "name": "Remaining Water",
+        "label": "ปริมาณน้ำที่ต้องดื่มเพิ่ม (ลิตร):",
+        "format": "{{msg.payload}} L",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 850,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "e43690e71d1275e2",
+        "type": "switch",
+        "z": "83433bbfc4f221ea",
+        "name": "Trigger Alert?",
+        "property": "0",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            }
+        ],
+        "repair": false,
+        "outputs": 1,
+        "x": 860,
+        "y": 320,
+        "wires": [
+            [
+                "2ba66fbf4c6fc145"
+            ]
+        ]
+    },
+    {
+        "id": "2ba66fbf4c6fc145",
+        "type": "mqtt out",
+        "z": "83433bbfc4f221ea",
+        "name": "Buzzer Board 2",
+        "topic": "b6810504044/noti/on",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "0396c2c9339809f4",
+        "x": 1080,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "9084dbd8054fb73a",
+        "type": "ui_button",
+        "z": "83433bbfc4f221ea",
+        "d": true,
+        "name": "Mute Alarm",
+        "group": "ui_group_status",
+        "order": 20,
+        "width": "",
+        "height": "",
+        "passthru": false,
+        "label": "หยุดเสียงแจ้งเตือน (Mute)",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "red",
+        "className": "",
+        "icon": "volume_off",
+        "payload": "0",
+        "payloadType": "str",
+        "topic": "room/buzzer",
+        "topicType": "str",
+        "x": 820,
+        "y": 380,
+        "wires": [
+            [
+                "9d4ce617c1852915"
+            ]
+        ]
+    },
+    {
+        "id": "9d4ce617c1852915",
+        "type": "function",
+        "z": "83433bbfc4f221ea",
+        "name": "Set Mute State",
+        "func": "flow.set('muteActive', true);\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 380,
+        "wires": [
+            [
+                "2ba66fbf4c6fc145"
+            ]
+        ]
+    },
+    {
+        "id": "896194042c433a16",
+        "type": "ui_text",
+        "z": "83433bbfc4f221ea",
+        "group": "ui_group_status",
+        "order": 4,
+        "width": "",
+        "height": "",
+        "name": "",
+        "label": "เป้าหมายการดื่ม (ลิตร):",
+        "format": "{{msg.payload}} L",
+        "layout": "",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 840,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "5ec7ba6f678d323b",
+        "type": "ui_gauge",
+        "z": "83433bbfc4f221ea",
+        "name": "",
+        "group": "ui_group_status",
+        "order": 12,
+        "width": "",
+        "height": "",
+        "gtype": "gage",
+        "title": "",
+        "label": "ความคืบหน้า",
+        "format": "{{msg.payload}}%",
+        "min": 0,
+        "max": 100,
+        "colors": [
+            "#ca3838",
+            "#e6e600",
+            "#00b500"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 790,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "96fca93be6f84d5a",
+        "type": "inject",
+        "z": "83433bbfc4f221ea",
+        "name": "เช็คทุก 1 ชั่วโมง",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 340,
+        "y": 220,
+        "wires": [
+            [
+                "0a9fc294a3934013"
+            ]
+        ]
+    },
+    {
+        "id": "8c4247f8dbc82207",
+        "type": "mqtt in",
+        "z": "83433bbfc4f221ea",
+        "name": "",
+        "topic": "b6810504044/room/temp",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "e9d6f6e8257b6d98",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 800,
+        "wires": [
+            [
+                "a298f5f2508c5614"
+            ]
+        ]
+    },
+    {
+        "id": "a298f5f2508c5614",
+        "type": "ui_gauge",
+        "z": "83433bbfc4f221ea",
+        "name": "",
+        "group": "ui_group_status",
+        "order": 21,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Temperature ",
+        "label": "Degree Celcius",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 550,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "dcda1a9d4fe15ffb",
+        "type": "mqtt in",
+        "z": "83433bbfc4f221ea",
+        "name": "",
+        "topic": "b6810504044/room/humid",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "e9d6f6e8257b6d98",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 860,
+        "wires": [
+            [
+                "b3d4a489118f3270"
+            ]
+        ]
+    },
+    {
+        "id": "b3d4a489118f3270",
+        "type": "ui_gauge",
+        "z": "83433bbfc4f221ea",
+        "name": "",
+        "group": "ui_group_status",
+        "order": 15,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Humidity",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 440,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "96d1de456ceae35d",
+        "type": "mqtt in",
+        "z": "83433bbfc4f221ea",
+        "name": "",
+        "topic": "b6810504044/user/waterlevel",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "e9d6f6e8257b6d98",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 560,
+        "wires": [
+            [
+                "b26f7c5b1f5a2cca",
+                "a1b5b37dbc32582c"
+            ]
+        ]
+    },
+    {
+        "id": "a1b5b37dbc32582c",
+        "type": "function",
+        "z": "83433bbfc4f221ea",
+        "name": "Calc Consumed from Level",
+        "func": "let currentLevel = parseFloat(msg.payload);\nif (isNaN(currentLevel)) return null;\n\nlet lastLevel = flow.get('lastWaterLevel');\nlet glassCapacity = 400; // ความจุแก้วน้ำ (ml) เปลี่ยนค่าได้ที่นี่\nlet consumedAmount = 0;\n\nif (lastLevel !== undefined && currentLevel < lastLevel) {\n    // ถ้าระดับน้ำลดลง ให้คำนวณปริมาณที่ดื่ม\n    // สมมติว่าเซ็นเซอร์ส่งมาเป็น % (0-100)\n    let diffPercent = lastLevel - currentLevel;\n    consumedAmount = (diffPercent / 100) * glassCapacity;\n    \n    // *หมายเหตุ: ถ้าเซ็นเซอร์คุณส่งมาเป็น ml ตรงๆ เลย ให้ใช้บรรทัดล่างนี้แทน*\n    // consumedAmount = lastLevel - currentLevel;\n}\n\n// บันทึกระดับน้ำปัจจุบันไว้เทียบในครั้งถัดไป\nflow.set('lastWaterLevel', currentLevel);\n\nif (consumedAmount > 0) {\n    msg.payload = consumedAmount;\n    return msg;\n}\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 560,
+        "wires": [
+            [
+                "d9e7beb0c1511672"
+            ]
+        ]
+    },
+    {
+        "id": "b26f7c5b1f5a2cca",
+        "type": "ui_gauge",
+        "z": "83433bbfc4f221ea",
+        "d": true,
+        "name": "",
+        "group": "ui_group_status",
+        "order": 25,
+        "width": 0,
+        "height": 0,
+        "gtype": "wave",
+        "title": "Water level ระดับน้ำในแก้ว",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 510,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "dcfb8e45d1abdaac",
+        "type": "ui_text",
+        "z": "83433bbfc4f221ea",
+        "group": "ui_group_status",
+        "order": 6,
+        "width": "",
+        "height": "",
+        "name": "",
+        "label": "เป้าหมายการดื่มต่อชั่วโมง (ลิตร):",
+        "format": "{{msg.payload}} L",
+        "layout": "",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1090,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "86c8797ca901918d",
+        "type": "ui_button",
+        "z": "83433bbfc4f221ea",
+        "name": "",
+        "group": "ui_group_status",
+        "order": 26,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Stop Alert",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "0",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 860,
+        "y": 680,
+        "wires": [
+            [
+                "0717e3304be2c352"
+            ]
+        ]
+    },
+    {
+        "id": "0717e3304be2c352",
+        "type": "mqtt out",
+        "z": "83433bbfc4f221ea",
+        "name": "",
+        "topic": "b6810504044/noti/on",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "e9d6f6e8257b6d98",
+        "x": 1180,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "ui_group_profile",
+        "type": "ui_group",
+        "name": "ข้อมูลผู้ใช้ (Patient Profile)",
+        "tab": "ui_tab_main",
+        "order": 1,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "0396c2c9339809f4",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "iot.cpe.ku.ac.th",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "ui_group_status",
+        "type": "ui_group",
+        "name": "สถานะปัจจุบัน",
+        "tab": "ui_tab_main",
+        "order": 2,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "caa578058f4da87f",
+        "type": "ui_group",
+        "name": "3. สถิติการดื่มน้ำ (Statistics)",
+        "tab": "ui_tab_main",
+        "order": 3,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "e9d6f6e8257b6d98",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "iot.cpe.ku.ac.th",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "ui_tab_main",
+        "type": "ui_tab",
+        "name": "Elderly Water Monitor",
+        "icon": "dashboard",
+        "order": 1
+    }
+]
