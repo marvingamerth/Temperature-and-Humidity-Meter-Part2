@@ -13,7 +13,7 @@
 sensor.ino - ไฟล์สำหรับ ESP32 ของเครื่องวัดอุณหภูมิและความชื้นอากาศ  
 user.ino - ไฟล์สำหรับ ESP32 ของชุดอุปกรณ์แท่นวางแก้วน้ำ  
 buzzer_controller.ino - ไฟล์สำหรับ Arduino UNO R3 ที่ใช้ในการควบคุมการทำงานของ BUZZER ส่งเสียง  
-config-example.h - ไฟล์ตัวอย่างของการใส่ข้อมูลสำหรับการเชื่อมต่อ WiFi และ MQTT  
+config-example.txt - ไฟล์ตัวอย่างของการใส่ข้อมูลสำหรับการเชื่อมต่อ WiFi และ MQTT  
 flow.txt - ไฟล์ JSON ของ Node ต่าง ๆ ที่ทำงานบน Node RED Dashboard  
 prototype_user.png - ผังวงจรของอุปกรณ์ในชุดแท่นวางแก้วน้ำ  
 prototype_server.png - ผังวงจรของอุปกรณ์ตรวจวัดอุณหภูมิและความชื่้น และแจ้งเตือน  
