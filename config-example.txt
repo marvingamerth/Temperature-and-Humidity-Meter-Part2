@@ -1,0 +1,6 @@
+WIFI_SSID = '<your-SSID>'
+WIFI_PASS = '<your-PASSWORD>'
+MQTT_BROKER = '<your-BROKER>'
+MQTT_USER = '<your-USERNAME>'     # ไม่ต้องใส่เครื่องหมาย <>
+MQTT_PASS = '<your-MQTT-PASSWORD>'         # ไม่ต้องใส่เครื่องหมาย <>
+TOPIC_PREFIX = '<your-TOPIC-PREFIX>'  # ไม่ต้องใส่เครื่องหมาย <>
